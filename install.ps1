@@ -130,10 +130,10 @@ $Settings = @"
   },
   "mcpServers": {
     "sanmartin": {
-      "type": "sse",
-      "url": "$ServerUrl",
+      "type": "http",
+      "url": "$ServerUrl/mcp",
       "headers": {
-        "X-API-Key": "$ApiKey"
+        "Authorization": "Bearer $ApiKey"
       }
     }
   }

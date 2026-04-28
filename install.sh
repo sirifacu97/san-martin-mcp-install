@@ -127,10 +127,10 @@ cat > "$CLAUDE_DIR/settings.json" <<EOF
   },
   "mcpServers": {
     "sanmartin": {
-      "type": "sse",
-      "url": "$SERVER_URL",
+      "type": "http",
+      "url": "$SERVER_URL/mcp",
       "headers": {
-        "X-API-Key": "$API_KEY"
+        "Authorization": "Bearer $API_KEY"
       }
     }
   }
