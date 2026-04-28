@@ -39,6 +39,11 @@ Write-Host "[DIAG] ClaudeDir    = $ClaudeDir"
 Write-Host "[DIAG] PWD          = $(Get-Location)"
 Write-Host "[DIAG] claude in PATH: $(if (Get-Command claude -ErrorAction SilentlyContinue) { (Get-Command claude).Source } else { 'NOT FOUND' })"
 Write-Host "[DIAG] marketplace.json exists: $(Test-Path '.claude-plugin\marketplace.json')"
+Write-Host "[DIAG] Searching for claude.exe / claude.cmd ..."
+@("$env:LOCALAPPDATA", "$env:APPDATA", "$env:USERPROFILE") | ForEach-Object {
+    Get-ChildItem -Path $_ -Include "claude.exe","claude.cmd","claude.ps1" -Recurse -Depth 6 -ErrorAction SilentlyContinue |
+        ForEach-Object { Write-Host "[DIAG] Found: $($_.FullName)" }
+}
 Write-Host ""
 
 # ── 1. Validate API key ───────────────────────────────────────────────────────
