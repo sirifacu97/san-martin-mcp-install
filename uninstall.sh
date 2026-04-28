@@ -30,38 +30,12 @@ if [ ! -f "$MARKER" ]; then
   fi
 fi
 
-# ── 2. Remove MCP server registration ────────────────────────────────────────
-info "Removing MCP server..."
-claude mcp remove sanmartin --scope user 2>/dev/null \
-  && success "MCP server removed" \
-  || info "MCP server was not registered — skipping"
-
-# ── 3. Uninstall plugin and remove marketplace registration ──────────────────
-info "Uninstalling plugin..."
-claude plugin uninstall sanmartin-mcp@local 2>/dev/null \
-  && success "Plugin uninstalled" \
-  || info "Plugin was not installed — skipping"
-
-info "Removing marketplace registration..."
-claude plugin marketplace remove local 2>/dev/null \
-  && success "Marketplace registration removed" \
-  || info "Marketplace was not registered — skipping"
-
-# ── 4. Remove local-marketplace directory ────────────────────────────────────
+# ── 2. Remove local-marketplace directory ────────────────────────────────────
 info "Removing $MARKETPLACE_DIR..."
 rm -rf "$MARKETPLACE_DIR"
 success "Removed $MARKETPLACE_DIR"
 
-# ── 5. Restore CLAUDE.md ─────────────────────────────────────────────────────
-if [ -f "$CLAUDE_DIR/CLAUDE.md.bak" ]; then
-  mv "$CLAUDE_DIR/CLAUDE.md.bak" "$CLAUDE_DIR/CLAUDE.md"
-  success "Restored CLAUDE.md from backup"
-elif [ -f "$CLAUDE_DIR/CLAUDE.md" ]; then
-  rm "$CLAUDE_DIR/CLAUDE.md"
-  success "Removed CLAUDE.md (created by installer, no prior backup)"
-fi
-
-# ── 6. Restore settings.json ─────────────────────────────────────────────────
+# ── 3. Restore settings.json ─────────────────────────────────────────────────
 if [ -f "$CLAUDE_DIR/settings.json.bak" ]; then
   mv "$CLAUDE_DIR/settings.json.bak" "$CLAUDE_DIR/settings.json"
   success "Restored settings.json from backup"

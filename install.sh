@@ -40,38 +40,21 @@ if [ ! -f ".claude-plugin/marketplace.json" ]; then
   error "Run this script from the root of the cloned san-martin-mcp-install repo."
 fi
 
-# ── 3. Pre-flight checks ──────────────────────────────────────────────────────
-info "Checking prerequisites..."
-
-if ! command -v claude &>/dev/null; then
-  error "'claude' CLI not found.\n  If you just installed Claude Code, open a new terminal and try again.\n  Otherwise, install it first: https://claude.ai/code"
-fi
-success "claude CLI found"
-
-if ! command -v git &>/dev/null; then
-  error "'git' not found. Install git and try again."
-fi
-success "git found"
-
-# ── 4. Beta-collision check ───────────────────────────────────────────────────
+# ── 3. Beta-collision check ───────────────────────────────────────────────────
 if [ -f "$BETA_MARKER" ] && [ ! -f "$MARKER" ]; then
   error "Beta install detected.\n  Run the beta uninstaller first, then re-run this script.\n  From the claude-personal-setup repo: ./uninstall.sh"
 fi
 
-# ── 5. Guard against overwriting unrelated local-marketplace ─────────────────
+# ── 4. Guard against overwriting unrelated local-marketplace ─────────────────
 if [ -d "$MARKETPLACE_DIR" ] && [ ! -f "$MARKER" ]; then
   error "$MARKETPLACE_DIR already exists and was not created by this installer.\nRemove or rename it manually, then re-run."
 fi
 
-# ── 6. Back up existing config files (only if no backup already exists) ───────
-info "Backing up existing config..."
+# ── 5. Ensure ~/.claude exists ────────────────────────────────────────────────
+mkdir -p "$CLAUDE_DIR"
 
-if [ -f "$CLAUDE_DIR/CLAUDE.md" ] && [ ! -f "$CLAUDE_DIR/CLAUDE.md.bak" ]; then
-  cp "$CLAUDE_DIR/CLAUDE.md" "$CLAUDE_DIR/CLAUDE.md.bak"
-  success "Backed up CLAUDE.md → CLAUDE.md.bak"
-elif [ -f "$CLAUDE_DIR/CLAUDE.md.bak" ]; then
-  info "CLAUDE.md.bak already exists — keeping original backup"
-fi
+# ── 6. Back up existing settings.json ────────────────────────────────────────
+info "Backing up existing config..."
 
 if [ -f "$CLAUDE_DIR/settings.json" ] && [ ! -f "$CLAUDE_DIR/settings.json.bak" ]; then
   cp "$CLAUDE_DIR/settings.json" "$CLAUDE_DIR/settings.json.bak"
@@ -85,7 +68,6 @@ info "Copying plugin files..."
 
 rm -rf "$MARKETPLACE_DIR"
 mkdir -p "$MARKETPLACE_DIR"
-# Write marker immediately so uninstall.sh can clean up even if the copy fails.
 touch "$MARKER"
 
 rsync_excludes=(
@@ -104,10 +86,8 @@ rsync_excludes=(
 if command -v rsync &>/dev/null; then
   rsync -a "${rsync_excludes[@]}" . "$MARKETPLACE_DIR/"
 else
-  # Fallback: cp + manual cleanup
   cp -R . "$MARKETPLACE_DIR/"
-  rm -rf "$MARKETPLACE_DIR/.git"
-  rm -rf "$MARKETPLACE_DIR/docs"
+  rm -rf "$MARKETPLACE_DIR/.git" "$MARKETPLACE_DIR/docs"
   rm -f  "$MARKETPLACE_DIR/install.sh" "$MARKETPLACE_DIR/install.ps1"
   rm -f  "$MARKETPLACE_DIR/uninstall.sh" "$MARKETPLACE_DIR/uninstall.ps1"
   rm -f  "$MARKETPLACE_DIR/README.md"
@@ -117,8 +97,6 @@ success "Plugin files copied to $MARKETPLACE_DIR"
 
 # ── 8. Write settings.json ────────────────────────────────────────────────────
 info "Writing settings.json..."
-
-ACTUAL_PATH="$HOME/.claude/local-marketplace"
 
 cat > "$CLAUDE_DIR/settings.json" <<EOF
 {
@@ -140,36 +118,26 @@ cat > "$CLAUDE_DIR/settings.json" <<EOF
     "local": {
       "source": {
         "source": "directory",
-        "path": "$ACTUAL_PATH"
+        "path": "$HOME/.claude/local-marketplace"
       }
     }
   },
   "enabledPlugins": {
     "sanmartin-mcp@local": true
   },
+  "mcpServers": {
+    "sanmartin": {
+      "type": "sse",
+      "url": "$SERVER_URL",
+      "headers": {
+        "X-API-Key": "$API_KEY"
+      }
+    }
+  }
 }
 EOF
 
 success "settings.json written"
-
-# ── 9. Register MCP server ────────────────────────────────────────────────────
-info "Registering MCP server..."
-claude mcp remove sanmartin --scope user 2>/dev/null || true
-claude mcp add --transport http --scope user \
-  sanmartin "$SERVER_URL/mcp" \
-  --header "Authorization: Bearer $API_KEY"
-success "MCP server registered"
-
-# ── 10. Register marketplace and install plugin ───────────────────────────────
-info "Registering marketplace..."
-claude plugin marketplace add "$MARKETPLACE_DIR" --scope user 2>/dev/null \
-  || warn "Marketplace may already be registered — continuing"
-
-info "Installing plugin..."
-claude plugin install sanmartin-mcp@local \
-  || error "Plugin installation failed. Check 'claude plugin list' for details."
-
-success "Plugin installed"
 
 # ── Done ──────────────────────────────────────────────────────────────────────
 echo ""
