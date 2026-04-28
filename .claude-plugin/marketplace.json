@@ -1,0 +1,14 @@
+{
+  "name": "local",
+  "description": "San Martín Tools — MCP-backed skills",
+  "owner": {
+    "name": "sirifacu"
+  },
+  "plugins": [
+    {
+      "name": "sanmartin-mcp",
+      "description": "San Martín Tools — thin MCP-backed skills (spec, commit, prd, test-prints)",
+      "source": "./plugins/sanmartin-mcp"
+    }
+  ]
+}

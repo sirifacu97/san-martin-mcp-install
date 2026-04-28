@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "Agent(*)",
+      "mcp__*__*"
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "local": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/YOUR_USERNAME/.claude/local-marketplace"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "sanmartin-mcp@local": true
+  },
+  "mcpServers": {
+    "sanmartin": {
+      "type": "sse",
+      "url": "https://san-martin-mcp-web-hnditlm3aq-rj.a.run.app",
+      "headers": {
+        "X-API-Key": "__SANMARTIN_API_KEY__"
+      }
+    }
+  }
+}
