@@ -45,7 +45,27 @@ if (-not (Test-Path ".claude-plugin\marketplace.json")) {
 Write-Info "Checking prerequisites..."
 
 if (-not (Get-Command "claude" -ErrorAction SilentlyContinue)) {
-    Write-Fail "'claude' CLI not found.`n  If you just installed Claude Code, open a new PowerShell window and try again.`n  Otherwise, install it first: https://claude.ai/code"
+    # Claude Code on Windows may not add itself to PATH automatically.
+    # Probe known install locations and patch PATH for this session if found.
+    $ClaudeCandidates = @(
+        "$env:LOCALAPPDATA\Programs\claude\claude.exe",
+        "$env:LOCALAPPDATA\Programs\Claude\claude.exe",
+        "$env:LOCALAPPDATA\AnthropicClaude\claude.exe",
+        "$env:APPDATA\npm\claude.cmd"
+    )
+    $ClaudeBin = $null
+    foreach ($candidate in $ClaudeCandidates) {
+        if (Test-Path $candidate) {
+            $ClaudeBin = Split-Path $candidate
+            break
+        }
+    }
+    if ($ClaudeBin) {
+        $env:PATH = "$ClaudeBin;$env:PATH"
+        Write-Info "Added Claude to PATH for this session: $ClaudeBin"
+    } else {
+        Write-Fail "'claude' CLI not found.`n  Make sure Claude Code is installed: https://claude.ai/code`n  If just installed, open a new PowerShell window and retry.`n  If it still fails, find claude.exe and add its folder to your PATH."
+    }
 }
 Write-Success "claude CLI found"
 
