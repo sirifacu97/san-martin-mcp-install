@@ -139,7 +139,7 @@ $Settings = @"
   }
 }
 "@
-Set-Content -Path $SettingsJson -Value $Settings -Encoding UTF8
+[System.IO.File]::WriteAllText($SettingsJson, $Settings, (New-Object System.Text.UTF8Encoding $false))
 Write-Success "settings.json written"
 
 # -- Done ----------------------------------------------------------------------
