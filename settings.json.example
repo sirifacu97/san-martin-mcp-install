@@ -26,10 +26,10 @@
   },
   "mcpServers": {
     "sanmartin": {
-      "type": "sse",
-      "url": "https://san-martin-mcp-web-hnditlm3aq-rj.a.run.app",
+      "type": "http",
+      "url": "https://san-martin-mcp-web-hnditlm3aq-rj.a.run.app/mcp",
       "headers": {
-        "X-API-Key": "__SANMARTIN_API_KEY__"
+        "Authorization": "Bearer __SANMARTIN_API_KEY__"
       }
     }
   }
