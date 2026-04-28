@@ -1,4 +1,4 @@
-# San Martín Tools — MCP Uninstaller (Windows)
+﻿# San Martín Tools — MCP Uninstaller (Windows)
 # Removes everything the installer added and restores your original config.
 #
 # If execution policy blocks this script, run:
@@ -10,14 +10,14 @@ $ClaudeDir      = "$env:APPDATA\Claude"
 $MarketplaceDir = "$ClaudeDir\local-marketplace"
 $Marker         = "$MarketplaceDir\.sanmartin-mcp-installed"
 
-function Write-Success { param($msg) Write-Host "✓ $msg" -ForegroundColor Green }
-function Write-Info    { param($msg) Write-Host "  $msg" }
-function Write-Warn    { param($msg) Write-Host "⚠  $msg" -ForegroundColor Yellow }
-function Write-Fail    { param($msg) Write-Host "✗ $msg" -ForegroundColor Red; exit 1 }
+function Write-Success { param($msg) Write-Host "[OK] $msg" -ForegroundColor Green }
+function Write-Info    { param($msg) Write-Host "     $msg" }
+function Write-Warn    { param($msg) Write-Host "[!!] $msg" -ForegroundColor Yellow }
+function Write-Fail    { param($msg) Write-Host "[ERR] $msg" -ForegroundColor Red; exit 1 }
 
 Write-Host ""
-Write-Host "San Martín Tools — MCP Uninstaller" -ForegroundColor Cyan
-Write-Host "────────────────────────────────────"
+Write-Host "San Martin Tools -- MCP Uninstaller" -ForegroundColor Cyan
+Write-Host "------------------------------------"
 Write-Host ""
 
 # ── 1. Check marker ───────────────────────────────────────────────────────────

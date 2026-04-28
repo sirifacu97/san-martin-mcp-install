@@ -1,4 +1,4 @@
-# San Martín Tools — MCP Installer (Windows)
+﻿# San Martín Tools — MCP Installer (Windows)
 # Run this from the root of the cloned san-martin-mcp-install repo.
 #
 # Usage: .\install.ps1 -ApiKey <api-key>
@@ -21,14 +21,14 @@ $Marker         = "$MarketplaceDir\.sanmartin-mcp-installed"
 $BetaMarker     = "$MarketplaceDir\.sanmartin-installed"
 $ServerUrl      = "https://san-martin-mcp-web-hnditlm3aq-rj.a.run.app"
 
-function Write-Success { param($msg) Write-Host "✓ $msg" -ForegroundColor Green }
-function Write-Info    { param($msg) Write-Host "  $msg" }
-function Write-Warn    { param($msg) Write-Host "⚠  $msg" -ForegroundColor Yellow }
-function Write-Fail    { param($msg) Write-Host "✗ $msg" -ForegroundColor Red; exit 1 }
+function Write-Success { param($msg) Write-Host "[OK] $msg" -ForegroundColor Green }
+function Write-Info    { param($msg) Write-Host "     $msg" }
+function Write-Warn    { param($msg) Write-Host "[!!] $msg" -ForegroundColor Yellow }
+function Write-Fail    { param($msg) Write-Host "[ERR] $msg" -ForegroundColor Red; exit 1 }
 
 Write-Host ""
-Write-Host "San Martín Tools — MCP Installer" -ForegroundColor Cyan
-Write-Host "──────────────────────────────────"
+Write-Host "San Martin Tools -- MCP Installer" -ForegroundColor Cyan
+Write-Host "----------------------------------"
 Write-Host ""
 
 # ── 1. Validate API key ───────────────────────────────────────────────────────
