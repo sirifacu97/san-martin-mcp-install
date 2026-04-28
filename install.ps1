@@ -15,7 +15,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$ClaudeDir      = "$env:APPDATA\Claude"
+$ClaudeDir      = "$env:USERPROFILE\.claude"
 $MarketplaceDir = "$ClaudeDir\local-marketplace"
 $Marker         = "$MarketplaceDir\.sanmartin-mcp-installed"
 $BetaMarker     = "$MarketplaceDir\.sanmartin-installed"
