@@ -124,15 +124,15 @@ $Settings = @"
 {
   "permissions": {
     "allow": [
-      "Bash(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "WebFetch(*)",
-      "WebSearch(*)",
-      "Agent(*)",
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch(domain:*)",
+      "WebSearch",
+      "Agent",
       "mcp__*__*"
     ]
   },
@@ -146,22 +146,19 @@ $Settings = @"
   },
   "enabledPlugins": {
     "sanmartin-mcp@local": true
-  },
-  "mcpServers": {
-    "sanmartin": {
-      "type": "sse",
-      "url": "$ServerUrl",
-      "headers": {
-        "X-API-Key": "$ApiKey"
-      }
-    }
   }
 }
 "@
 Set-Content -Path $SettingsJson -Value $Settings -Encoding UTF8
 Write-Success "settings.json written"
 
-# ── 9. Register marketplace and install plugin ────────────────────────────────
+# ── 9. Register MCP server ────────────────────────────────────────────────────
+Write-Info "Registering MCP server..."
+try { claude mcp remove sanmartin --scope user 2>$null } catch {}
+claude mcp add --transport http --scope user sanmartin "$ServerUrl/mcp" --header "Authorization: Bearer $ApiKey"
+Write-Success "MCP server registered"
+
+# ── 10. Register marketplace and install plugin ───────────────────────────────
 Write-Info "Registering marketplace..."
 try {
     claude plugin marketplace add "$MarketplaceDir" --scope user 2>$null

@@ -30,7 +30,16 @@ if (-not (Test-Path $Marker)) {
     }
 }
 
-# ── 2. Uninstall plugin and remove marketplace registration ───────────────────
+# ── 2. Remove MCP server registration ────────────────────────────────────────
+Write-Info "Removing MCP server..."
+try {
+    claude mcp remove sanmartin --scope user 2>$null
+    Write-Success "MCP server removed"
+} catch {
+    Write-Info "MCP server was not registered — skipping"
+}
+
+# ── 3. Uninstall plugin and remove marketplace registration ──────────────────
 Write-Info "Uninstalling plugin..."
 try {
     claude plugin uninstall sanmartin-mcp@local 2>$null
@@ -47,12 +56,12 @@ try {
     Write-Info "Marketplace was not registered — skipping"
 }
 
-# ── 3. Remove local-marketplace directory ────────────────────────────────────
+# ── 4. Remove local-marketplace directory ────────────────────────────────────
 Write-Info "Removing $MarketplaceDir..."
 Remove-Item -Recurse -Force $MarketplaceDir
 Write-Success "Removed $MarketplaceDir"
 
-# ── 4. Restore CLAUDE.md ─────────────────────────────────────────────────────
+# ── 5. Restore CLAUDE.md ─────────────────────────────────────────────────────
 $ClaudeMd    = "$ClaudeDir\CLAUDE.md"
 $ClaudeMdBak = "$ClaudeDir\CLAUDE.md.bak"
 
@@ -64,7 +73,7 @@ if (Test-Path $ClaudeMdBak) {
     Write-Success "Removed CLAUDE.md (created by installer, no prior backup)"
 }
 
-# ── 5. Restore settings.json ─────────────────────────────────────────────────
+# ── 6. Restore settings.json ─────────────────────────────────────────────────
 $SettingsJson    = "$ClaudeDir\settings.json"
 $SettingsJsonBak = "$ClaudeDir\settings.json.bak"
 

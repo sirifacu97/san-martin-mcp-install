@@ -147,21 +147,20 @@ cat > "$CLAUDE_DIR/settings.json" <<EOF
   "enabledPlugins": {
     "sanmartin-mcp@local": true
   },
-  "mcpServers": {
-    "sanmartin": {
-      "type": "http",
-      "url": "$SERVER_URL/mcp",
-      "headers": {
-        "Authorization": "Bearer $API_KEY"
-      }
-    }
-  }
 }
 EOF
 
 success "settings.json written"
 
-# ── 9. Register marketplace and install plugin ────────────────────────────────
+# ── 9. Register MCP server ────────────────────────────────────────────────────
+info "Registering MCP server..."
+claude mcp remove sanmartin --scope user 2>/dev/null || true
+claude mcp add --transport http --scope user \
+  sanmartin "$SERVER_URL/mcp" \
+  --header "Authorization: Bearer $API_KEY"
+success "MCP server registered"
+
+# ── 10. Register marketplace and install plugin ───────────────────────────────
 info "Registering marketplace..."
 claude plugin marketplace add "$MARKETPLACE_DIR" --scope user 2>/dev/null \
   || warn "Marketplace may already be registered — continuing"
