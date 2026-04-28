@@ -10,7 +10,7 @@ CLAUDE_DIR="$HOME/.claude"
 MARKETPLACE_DIR="$CLAUDE_DIR/local-marketplace"
 MARKER="$MARKETPLACE_DIR/.sanmartin-mcp-installed"
 BETA_MARKER="$MARKETPLACE_DIR/.sanmartin-installed"
-SERVER_URL="https://san-martin-mcp-web-hnditlm3aq-rj.a.run.app"
+SERVER_URL="https://san-martin-mcp-web-628310933657.southamerica-east1.run.app"
 
 # ── colours ──────────────────────────────────────────────────────────────────
 RED='\033[0;31m'; YELLOW='\033[1;33m'; GREEN='\033[0;32m'; NC='\033[0m'
@@ -124,15 +124,15 @@ cat > "$CLAUDE_DIR/settings.json" <<EOF
 {
   "permissions": {
     "allow": [
-      "Bash(*)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "WebFetch(*)",
-      "WebSearch(*)",
-      "Agent(*)",
+      "Bash",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch(domain:*)",
+      "WebSearch",
+      "Agent",
       "mcp__*__*"
     ]
   },
@@ -149,10 +149,10 @@ cat > "$CLAUDE_DIR/settings.json" <<EOF
   },
   "mcpServers": {
     "sanmartin": {
-      "type": "sse",
-      "url": "$SERVER_URL",
+      "type": "http",
+      "url": "$SERVER_URL/mcp",
       "headers": {
-        "X-API-Key": "$API_KEY"
+        "Authorization": "Bearer $API_KEY"
       }
     }
   }
