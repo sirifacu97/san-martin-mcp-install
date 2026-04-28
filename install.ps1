@@ -31,6 +31,16 @@ Write-Host "San Martin Tools -- MCP Installer" -ForegroundColor Cyan
 Write-Host "----------------------------------"
 Write-Host ""
 
+# ── 0. Diagnostics ───────────────────────────────────────────────────────────
+Write-Host "[DIAG] USERPROFILE  = $env:USERPROFILE"
+Write-Host "[DIAG] APPDATA      = $env:APPDATA"
+Write-Host "[DIAG] LOCALAPPDATA = $env:LOCALAPPDATA"
+Write-Host "[DIAG] ClaudeDir    = $ClaudeDir"
+Write-Host "[DIAG] PWD          = $(Get-Location)"
+Write-Host "[DIAG] claude in PATH: $(if (Get-Command claude -ErrorAction SilentlyContinue) { (Get-Command claude).Source } else { 'NOT FOUND' })"
+Write-Host "[DIAG] marketplace.json exists: $(Test-Path '.claude-plugin\marketplace.json')"
+Write-Host ""
+
 # ── 1. Validate API key ───────────────────────────────────────────────────────
 if ($ApiKey -notmatch '^[A-Za-z0-9_\-]+$') {
     Write-Fail "API key must contain only letters, digits, underscores, and hyphens."
