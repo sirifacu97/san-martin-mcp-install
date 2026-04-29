@@ -142,6 +142,36 @@ $Settings = @"
 [System.IO.File]::WriteAllText($SettingsJson, $Settings, (New-Object System.Text.UTF8Encoding $false))
 Write-Success "settings.json written"
 
+# -- 9. Register MCP server via CLI -------------------------------------------
+Write-Info "Registering MCP server..."
+
+$ClaudeCandidates = @(
+    "$env:USERPROFILE\.local\bin\claude.exe",
+    "$env:LOCALAPPDATA\Programs\claude\claude.exe",
+    "$env:LOCALAPPDATA\Programs\Claude\claude.exe",
+    "$env:LOCALAPPDATA\AnthropicClaude\claude.exe"
+)
+$ClaudeBin = $null
+foreach ($candidate in $ClaudeCandidates) {
+    if (Test-Path $candidate) { $ClaudeBin = $candidate; break }
+}
+if (-not $ClaudeBin) {
+    $found = Get-Command "claude" -ErrorAction SilentlyContinue
+    if ($found) { $ClaudeBin = $found.Source }
+}
+
+if ($ClaudeBin) {
+    try {
+        & $ClaudeBin mcp remove sanmartin --scope user 2>$null
+    } catch {}
+    & $ClaudeBin mcp add --transport http --scope user sanmartin "$ServerUrl/mcp" --header "Authorization: Bearer $ApiKey"
+    Write-Success "MCP server registered"
+} else {
+    Write-Warn "claude CLI not found -- MCP server not registered via CLI."
+    Write-Warn "Run manually after install:"
+    Write-Warn "  claude mcp add --transport http --scope user sanmartin `"$ServerUrl/mcp`" --header `"Authorization: Bearer $ApiKey`""
+}
+
 # -- Done ----------------------------------------------------------------------
 Write-Host ""
 Write-Host "San Martin Tools (MCP) installed successfully." -ForegroundColor Green
