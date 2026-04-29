@@ -13,7 +13,7 @@ This is a thin client. All workflow logic lives on the San Martín Tools MCP ser
 
 ## What to do
 
-1. Immediately call the MCP tool `mcp__sanmartin__get_phase` with `phase_name: "test_prints"`. Pass the user's full argument string under the `arguments` field.
+1. Immediately call the MCP tool `mcp__sanmartin__get_phase` with `phase_name: "test-prints"`. Pass the user's full argument string under the `arguments` field.
 2. The tool returns the current workflow instructions for this phase. Follow them exactly using your local tools (Read, Edit, Write, Bash, Grep, Glob, AskUserQuestion).
 3. At every phase transition (or any time the returned instructions tell you to move to another phase), call `mcp__sanmartin__get_phase` again with the next `phase_name`.
 4. Do not plan or implement anything from this stub. The server is the source of truth — this file only routes to it.
